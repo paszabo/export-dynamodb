@@ -98,6 +98,10 @@ def convert_rawdata_to_stringvalue(data):
     for item in data:
         obj = {}
         for k, v in item.items():
+            if isinstance(v, [dict, tuple, list]):
+                obj[k] = v
+                continue
+
             obj[k] = str(v)
         ret.append(obj)
     return ret

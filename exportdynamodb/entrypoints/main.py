@@ -37,11 +37,15 @@ def get_keys(data):
     return keys
 
 
-class DecimalEncoder(json.JSONEncoder):
+class MigrationEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, decimal.Decimal):
             return float(o)
-        return super().default(o)
+
+        try:
+            return super().default(o)
+        except ValueError:
+            return str(o)
 
 
 def read_dynamodb_data(table):
@@ -107,7 +111,7 @@ def convert_rawdata_to_stringvalue(data):
     for item in data:
         obj = {}
         for k, v in item.items():
-            if isinstance(v, (dict, tuple, list)):
+            if isinstance(v, (dict, tuple, list, bool)):
                 obj[k] = v
                 continue
 
@@ -128,7 +132,7 @@ def write_to_json_file(data, filename):
 
     print("Writing to json file.")
     with open(filename, 'w') as f:
-        f.write(json.dumps(convert_rawdata_to_stringvalue(data['items']), cls=DecimalEncoder))
+        f.write(json.dumps(convert_rawdata_to_stringvalue(data['items']), cls=MigrationEncoder))
 
 
 def write_to_csv_file(data, filename):

@@ -9,7 +9,7 @@ def readme():
 setup(
     name='export-dynamodb',
     packages=['exportdynamodb', 'exportdynamodb.entrypoints'],
-    version='2.2.1',
+    version='2.3.0',
     description='A cli to export Amazon DynamoDb',
     long_description=readme(),
     long_description_content_type='text/markdown',
@@ -17,7 +17,6 @@ setup(
     author_email='travistrle@gmail.com',
     url='https://github.com/travistrle/export-dynamodb.git',
     license='GPLv3',
-    download_url='https://github.com/travistrle/export-dynamodb/archive/2.2.1.tar.gz',
     keywords=['aws', 'dynamodb', 'export'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',

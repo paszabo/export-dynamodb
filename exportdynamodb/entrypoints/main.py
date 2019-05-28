@@ -1,9 +1,11 @@
 """
 Export DynamoDb Module
 """
-import click
-import json
 import csv
+import decimal
+import json
+
+import click
 from boto3 import resource
 
 
@@ -33,6 +35,13 @@ def get_keys(data):
     for item in data:
         keys = keys.union(set(item.keys()))
     return keys
+
+
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, decimal.Decimal):
+            return float(o)
+        return super().default(o)
 
 
 def read_dynamodb_data(table):
@@ -98,7 +107,7 @@ def convert_rawdata_to_stringvalue(data):
     for item in data:
         obj = {}
         for k, v in item.items():
-            if isinstance(v, [dict, tuple, list]):
+            if isinstance(v, (dict, tuple, list)):
                 obj[k] = v
                 continue
 
@@ -119,7 +128,7 @@ def write_to_json_file(data, filename):
 
     print("Writing to json file.")
     with open(filename, 'w') as f:
-        f.write(json.dumps(convert_rawdata_to_stringvalue(data['items'])))
+        f.write(json.dumps(convert_rawdata_to_stringvalue(data['items']), cls=DecimalEncoder))
 
 
 def write_to_csv_file(data, filename):

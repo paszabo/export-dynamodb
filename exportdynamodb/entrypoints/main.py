@@ -40,7 +40,7 @@ def get_keys(data):
 class MigrationEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, decimal.Decimal):
-            return float(o)
+            return str(o)
 
         try:
             return super().default(o)
